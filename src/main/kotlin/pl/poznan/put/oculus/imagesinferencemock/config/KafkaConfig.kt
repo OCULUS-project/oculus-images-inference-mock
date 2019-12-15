@@ -44,7 +44,6 @@ class KafkaTopicConfig (
                     ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to JsonDeserializer::class.java,
                     JsonDeserializer.TRUSTED_PACKAGES to "*",
                     JsonDeserializer.VALUE_DEFAULT_TYPE to JobEvent::class.java
-
         )
     )
 
@@ -57,7 +56,8 @@ class KafkaTopicConfig (
             mapOf(
                     ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapAddress,
                     ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java,
-                    ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java
+                    ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java,
+                    JsonSerializer.ADD_TYPE_INFO_HEADERS to false
             )
     )
 

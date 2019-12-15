@@ -20,20 +20,18 @@ fun main(args: Array<String>) {
 
 @Component
 class Mock (
-        private val factsKafkaTemplate: KafkaTemplate<String, SourceFactEvent>,
-        private val jobsKafkaTemplate: KafkaTemplate<String, JobEvent>
+        private val factsKafkaTemplate: KafkaTemplate<String, SourceFactEvent>
 ) {
     @KafkaListener(topics = ["jobs"], groupId = "1")
     fun receive(event: JobEvent) {
         if(event.type == "NEW") {
             logger.info("received new job event for job ${event.jobId}")
             generateRandomFacts(event.jobId)
-            sendFactsGenerationEndedEvent(event.jobId)
         }
     }
 
     private fun generateRandomFacts(jobId: String) {
-        val n = (150000..1500000).random()
+        val n = (500..1500).random()
         repeat(n) {
             factsKafkaTemplate.send("sourceFacts", SourceFactEvent(
                     "head_$it",
@@ -41,14 +39,11 @@ class Mock (
                     false,
                     GrfIrf((1..100).random() / 100.0, (1..100).random() / 100.0),
                     jobId,
-                    FactSource("some_image_id")
+                    FactSource("some_image_id"),
+                    it == n-1
             ))
         }
         logger.info("generated $n random facts for job $jobId")
-    }
-
-    private fun sendFactsGenerationEndedEvent(jobId: String) {
-        jobsKafkaTemplate.send("jobs", JobEvent("IMAGES_INFERENCE_ENDED", jobId))
     }
 
     companion object {

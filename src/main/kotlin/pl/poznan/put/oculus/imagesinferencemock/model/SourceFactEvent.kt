@@ -6,7 +6,8 @@ data class SourceFactEvent (
         val conjunction: Boolean,
         val grfIrf: GrfIrf,
         val job: String,
-        val source: FactSource
+        val source: FactSource,
+        val last: Boolean
 )
 
 data class GrfIrf(
